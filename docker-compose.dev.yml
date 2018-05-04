@@ -1,8 +1,7 @@
-version: '3.4'
+version: '3.6'
 services:
   nginx-proxy:
-    image: jwilder/nginx-proxy:latest
-    container_name: judge0-dev-nginx-proxy
+    image: jwilder/nginx-proxy:0.7.0
     environment:
       - DEFAULT_HOST=api.judge0.local
     volumes:
@@ -16,15 +15,9 @@ services:
       context: .
       dockerfile: Dockerfile.dev
       args:
-<<<<<<< 27ab6e8c62a71662be41f70d640badf2ff53d8c2
         - DEV_USER=$JUDGE0_DEV_USER
         - DEV_USER_ID=$JUDGE0_DEV_UID
-=======
-        - DEV_USER=${USER:-judge0}
-        - DEV_USER_ID=${UID:-1000}
->>>>>>> Updated to Rails 5.1 and Pg 1.0
     image: judge0/api:dev
-    container_name: judge0-dev-api
     environment:
       - VIRTUAL_HOST=api.judge0.local
       - VIRTUAL_PORT=3000
@@ -37,7 +30,6 @@ services:
 
   resque-web:
     image: ennexa/resque-web:latest
-    container_name: judge0-dev-resque-web
     command: -r redis://redis:6379
     ports:
       - "5678:5678"
@@ -45,17 +37,15 @@ services:
 
   db:
     image: postgres:10.3
-    container_name: judge0-dev-db
     env_file: judge0-api.conf
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
     restart: always
 
   redis:
     image: redis:3.2.11
-    container_name: judge0-dev-redis
     command: redis-server --appendonly yes
     volumes:
       - redis-data:/data
@@ -65,6 +55,4 @@ services:
 
 volumes:
   postgres-data:
-    name: judge0-dev-postgres-data
   redis-data:
-    name: judge0-dev-redis-data

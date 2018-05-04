@@ -282,7 +282,6 @@ languages = [
   }
 ]
 
-
 ActiveRecord::Base.transaction do
   Language.delete_all
   languages.each_with_index do |language, index|
